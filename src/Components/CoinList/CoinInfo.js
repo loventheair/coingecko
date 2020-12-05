@@ -1,32 +1,81 @@
 import React, { Fragment } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar } from '@fortawesome/free-regular-svg-icons'
+import { Link } from 'react-router-dom'
 import { faStar as Star } from '@fortawesome/free-solid-svg-icons'
-/* <FontAwesomeIcon className="full-icon" icon={Star} /> */
-
 import './CoinInfo.css'
 
+/* <FontAwesomeIcon className="full-icon" icon={Star} /> */
+//detail: https://api.coingecko.com/api/v3/coins/bitcoin
+
 function CoinInfo({ coinList, currency }) {
-    console.log('list:', coinList)
+    
+    const changePrice =(price)=>{
+        let result =price.split('').reverse()
+          .map((item,index)=>{
+            if (index%3===2&&index!==price.split('').length-1) {
+              item=`,${item}`
+            }
+            return item;
+          }).reverse().join('');
+        return result;
+    }
+
     const renderCoin = coinList.map((coin, index) => (
         <tr className="coin-list-tr" key={index}>
-            <td>
+            <td className="coin-name">
                 <FontAwesomeIcon className="empty-icon" icon={faStar} />
-                {coin.name}
+                <Link to={`detail/${coin.id}`}>
+                    <span>{coin.name}</span>
+                </Link>
             </td>
-            <td>{coin.symbol}</td>
             <td>
-                {currency === 'krw' ? '₩' : '$'}
-                {coin.current_price}
+                <span>{coin.symbol}</span>
+            </td>
+            <td>
+                <span>
+                    {currency === 'krw' ? '₩' : '$'}
+                    {changePrice(coin.current_price.toFixed(0))}
+                </span>
             </td>
             <td className="price_percent">
-                {coin.price_change_percentage_1h_in_currency.toFixed(1)}%
+                <span
+                    className={
+                        coin.price_change_percentage_1h_in_currency.toFixed(
+                            1
+                        ) >= 0
+                            ? 'price-up'
+                            : 'price-down'
+                    }
+                >
+                    {coin.price_change_percentage_1h_in_currency.toFixed(1)}%
+                </span>
             </td>
             <td className="price_percent">
-                {coin.price_change_percentage_24h_in_currency.toFixed(1)}%
+                <span
+                    className={
+                        coin.price_change_percentage_24h_in_currency.toFixed(
+                            1
+                        ) >= 0
+                            ? 'price-up'
+                            : 'price-down'
+                    }
+                >
+                    {coin.price_change_percentage_24h_in_currency.toFixed(1)}%
+                </span>
             </td>
             <td className="price_percent">
-                {coin.price_change_percentage_7d_in_currency.toFixed(1)}%
+                <span
+                    className={
+                        coin.price_change_percentage_7d_in_currency.toFixed(
+                            1
+                        ) >= 0
+                            ? 'price-up'
+                            : 'price-down'
+                    }
+                >
+                    {coin.price_change_percentage_7d_in_currency.toFixed(1)}%
+                </span>
             </td>
             <td>Seoul</td>
         </tr>
@@ -50,4 +99,4 @@ function CoinInfo({ coinList, currency }) {
     )
 }
 
-export default CoinInfo
+export default CoinInfo;
