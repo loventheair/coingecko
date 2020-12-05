@@ -9,7 +9,7 @@ import './CoinInfo.css'
 //detail: https://api.coingecko.com/api/v3/coins/bitcoin
 
 function CoinInfo({ coinList, currency }) {
-    
+    console.log('coinList:',coinList)
     const changePrice =(price)=>{
         let result =price.split('').reverse()
           .map((item,index)=>{
@@ -21,7 +21,13 @@ function CoinInfo({ coinList, currency }) {
         return result;
     }
 
-    const renderCoin = coinList.map((coin, index) => (
+    const renderCoin = coinList.map((coin, index) => {
+        const {price_change_percentage_1h_in_currency: price1h,
+            price_change_percentage_24h_in_currency:price24h,
+            price_change_percentage_7d_in_currency:price7d
+            } = coin;
+            console.log(price1h,price24h,price7d,'index:',index,coin)
+        return(
         <tr className="coin-list-tr" key={index}>
             <td className="coin-name">
                 <FontAwesomeIcon className="empty-icon" icon={faStar} />
@@ -40,46 +46,29 @@ function CoinInfo({ coinList, currency }) {
             </td>
             <td className="price_percent">
                 <span
-                    className={
-                        coin.price_change_percentage_1h_in_currency.toFixed(
-                            1
-                        ) >= 0
-                            ? 'price-up'
-                            : 'price-down'
-                    }
-                >
-                    {coin.price_change_percentage_1h_in_currency.toFixed(1)}%
+                    className={price1h && price1h.toFixed(2) >= 0
+                            ? 'price-up':'price-down'}
+                >{price1h ? `${price1h.toFixed(2)}%`: 'No data'}
                 </span>
             </td>
             <td className="price_percent">
                 <span
-                    className={
-                        coin.price_change_percentage_24h_in_currency.toFixed(
-                            1
-                        ) >= 0
-                            ? 'price-up'
-                            : 'price-down'
-                    }
-                >
-                    {coin.price_change_percentage_24h_in_currency.toFixed(1)}%
+                    className={price24h &&price24h.toFixed(2) >= 0
+                            ? 'price-up': 'price-down'}
+                >{price24h ?`${price24h.toFixed(2)}%`: 'No data'}
                 </span>
             </td>
             <td className="price_percent">
                 <span
-                    className={
-                        coin.price_change_percentage_7d_in_currency.toFixed(
-                            1
-                        ) >= 0
-                            ? 'price-up'
-                            : 'price-down'
+                    className={price7d && price7d.toFixed(2) >= 0
+                            ? 'price-up': 'price-down'
                     }
-                >
-                    {coin.price_change_percentage_7d_in_currency.toFixed(1)}%
+                >{price7d ? `${price7d.toFixed(2)}%`: 'No data'}
                 </span>
             </td>
             <td>Seoul</td>
         </tr>
-    ))
+    )})
     return (
         <div>
             <table className="coin-list">
